@@ -1,0 +1,16 @@
+pipeline {
+    agent any
+    stages {
+        stage('Hello') {
+            steps {
+                retry(3) {
+                    sh 'echo "Hello World"'
+                }
+
+                timeout(time: 3, unit: 'SECONDS') {
+                    sh 'sleep 5'
+                }
+            }
+        }
+    }
+}

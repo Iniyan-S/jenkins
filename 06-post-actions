@@ -1,0 +1,39 @@
+/*
+The post section defines one or more additional steps that are run upon the completion of a Pipeline's or stage's run (depending on the location of the post section within the Pipeline)
+Post can support any of the following post-condition blocks: always, changed, fixed, regression, aborted, failure, success, unstable, unsuccessful, and cleanup.
+https://www.jenkins.io/doc/book/pipeline/syntax/#post
+*/
+
+pipeline {
+    agent any
+    stages {
+        stage('Test-Post-Actions') {
+            steps {
+                sh 'echo "Failed!";exit 1'
+            }
+        }
+    }
+
+    post {
+        always {
+            echo "This will always run"
+        }
+
+        success {
+            echo "This will run only if successful"
+        }
+
+        failure {
+            echo "This will run only if failed"
+        }
+
+        unstable {
+            echo "This will run only if the run was as unstable"
+        }
+
+        changed {
+            echo "This will run only if the state of the pipeline has changed"
+            echo "If run has a different completion status from its previous run"
+        }
+    }
+}

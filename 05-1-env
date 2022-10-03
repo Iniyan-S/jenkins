@@ -1,0 +1,19 @@
+// The environment directive specifies a sequence of key-value pairs which will be defined as environment variables for all steps, or stage-specific steps, 
+// depending on where the environment directive is located within the Pipeline.
+// https://www.jenkins.io/doc/book/pipeline/syntax/#stage
+
+pipeline {
+    agent any
+    environment {
+        FIRST_NAME = "Iniyan"
+        LAST_NAME = "Sargunam"
+    }
+
+    stages {
+        stage('Echo Name') {
+            steps {
+                sh 'echo My Name is $FIRST_NAME $LAST_NAME'
+            }
+        }
+    }
+}
