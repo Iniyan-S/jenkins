@@ -1,0 +1,25 @@
+pipeline {
+  agent {
+    // label any
+    label 'linux-node'
+  }
+
+  tools {
+    // GO installation name given in GLOBAL TOOL CONFIGURATION
+    go '1.17'
+  }
+  environment {
+    // GO111MODULE=on will force using Go modules even if the project is in your GOPATH. Requires go.mod to work
+    GO111MODULE='on'
+  }
+
+  stages {
+    stage ('GO TEST') {
+      steps {
+        // Checkout go-webapp-sample from Public Repo
+        git url: 'https://github.com/AdminTurnedDevOps/go-webapp-sample.git'
+        sh 'go test ./...'
+      }
+    }
+  }
+}
