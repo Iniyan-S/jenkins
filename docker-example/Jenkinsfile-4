@@ -1,0 +1,32 @@
+// Pipeline to clean docker image and workspace directory
+
+pipeline {
+    agent none
+
+    stages {
+        stage('Version List') {
+            agent {
+                dockerfile {
+                    filename 'Dockerfile'
+                    dir 'docker-example'
+                }
+            }
+            steps {
+                sh '''
+                    node --version
+                    git --version
+                    curl --version
+                '''
+            }
+        }
+
+        stage('Clean Up') {
+            agent {label 'worker-node'} // Where the job is running, docker host.
+            
+            steps {
+                sh 'docker rmi -f $(docker images -q)'
+                deleteDir() // deleteDir: Recursively delete the current directory from the workspace (https://www.jenkins.io/doc/pipeline/steps/workflow-basic-steps/#deletedir-recursively-delete-the-current-directory-from-the-workspace)
+            }
+        }
+    }
+}
