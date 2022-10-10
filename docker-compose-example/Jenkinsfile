@@ -29,7 +29,7 @@ pipeline {
                 // --wait -> Wait for services to be running|healthy. Implies detached mode
                 // -d ->  Detached mode: Run containers in the background
                 sh '''
-                docker-compose up -d --no-color --wait 
+                docker-compose -f docker-compose-example/docker-compose.yaml up -d --no-color --wait 
                 docker-compose ps
                 '''
             }
@@ -49,7 +49,7 @@ pipeline {
         always {
             //--remove-orphans -> Remove containers for services not defined in the Compose file.
             // -v ->  Remove named volumes declared in the volumes section of the Compose file and anonymous volumes attached to containers.
-            sh 'docker-compose down --remove-orphans -v'
+            sh 'docker-compose -f docker-compose-example/docker-compose.yaml down --remove-orphans -v'
         }
     }
 }
