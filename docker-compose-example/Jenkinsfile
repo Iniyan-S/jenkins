@@ -38,7 +38,7 @@ pipeline {
         stage('Run Test againt the Echo Server Container') {
             steps {
                 // Ref: https://hub.docker.com/r/ealen/echo-server
-                sh 'curl http://localhost:3000/param?query=demo | jq'
+                sh 'curl http://localhost:3000/param?query=demo'
                 
             }
         }
