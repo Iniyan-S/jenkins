@@ -31,6 +31,7 @@ pipeline {
             filename 'Dockerfile'
             dir 'docker-example'
            // label 'docker-node'  // To specify which agents (by Label) to use for running Docker-based Pipelines.
+           additionalBuildArgs  '-t my-custom-image'
         }
     }
 
