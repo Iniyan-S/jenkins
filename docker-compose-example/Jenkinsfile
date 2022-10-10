@@ -29,7 +29,7 @@ pipeline {
                 // --wait -> Wait for services to be running|healthy. Implies detached mode
                 // -d ->  Detached mode: Run containers in the background
                 sh '''
-                docker-compose up -f docker-compose-example/docker-compose.yaml -d --no-color --wait 
+                docker-compose up -d --no-color --wait 
                 docker-compose ps
                 '''
             }
