@@ -30,7 +30,7 @@ pipeline {
                 // -d ->  Detached mode: Run containers in the background
                 sh '''
                 docker-compose -f docker-compose-example/docker-compose.yaml up -d --no-color --wait 
-                docker-compose ps
+                docker-compose -f docker-compose-example/docker-compose.yaml ps
                 '''
             }
         }
