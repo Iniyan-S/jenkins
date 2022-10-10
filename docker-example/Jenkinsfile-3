@@ -5,8 +5,9 @@ For projects which require a more customized execution environment, Pipeline als
 In contrast to the previous approach of using an "off-the-shelf" container, using the agent { dockerfile true } syntax will build a new image from a Dockerfile rather than pulling one from Docker Hub.
 */
 
+/*
 pipeline {
-    agent {dockerfile true}
+    agent {dockerfile true} // this works only if the Dockerfile is in the Repository's root directory.
 
     stages {
         stage('Version List') {
@@ -19,4 +20,30 @@ pipeline {
             }
         }
     }
+}
+*/
+// https://www.jenkins.io/doc/book/pipeline/syntax/#agent
+
+pipeline {
+    agent {
+        // If building a Dockerfile in another directory, use the dir option: agent { dockerfile { dir 'someSubDir' } }
+        dockerfile {
+            filename 'Dockerfile'
+            dir 'docker-example'
+            label 'my-custom-image'
+        }
+    }
+
+    stages {
+        stage('Version List') {
+            steps {
+                sh '''
+                git --version
+                node --version
+                curl --version
+            '''
+            }
+        }
+    }
+
 }
