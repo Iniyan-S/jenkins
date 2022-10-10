@@ -1,0 +1,22 @@
+// Using Dockerfile
+
+/*
+For projects which require a more customized execution environment, Pipeline also supports building and running a container from a Dockerfile in the source repository. 
+In contrast to the previous approach of using an "off-the-shelf" container, using the agent { dockerfile true } syntax will build a new image from a Dockerfile rather than pulling one from Docker Hub.
+*/
+
+pipeline {
+    agent {dockerfile true}
+
+    stages {
+        stage('Version List') {
+            steps {
+                sh '''
+                git --version
+                node --version
+                curl --version
+            '''
+            }
+        }
+    }
+}

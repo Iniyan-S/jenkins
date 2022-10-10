@@ -1,0 +1,16 @@
+// Using docker image node:16.13.1-alpine as agent 
+// https://www.jenkins.io/doc/book/pipeline/docker/
+
+pipeline {
+    agent {
+        docker {image 'node:16.13.1-alpine'}
+    }
+
+    stages {
+        stage('Node-Version') {
+            steps {
+                sh 'node --version'
+            }
+        }
+    }
+}

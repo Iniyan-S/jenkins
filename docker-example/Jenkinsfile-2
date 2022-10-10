@@ -1,0 +1,28 @@
+// Setting docker agents at stage level
+
+pipeline {
+    // Set agent to none at pipeline level
+    agent none
+    
+    stages {
+        stage('Maven-Version') {
+            agent {
+                docker { image 'maven:3.8.1-adoptopenjdk-11' }
+            }
+
+            steps {
+                sh 'mvn --version'
+            }
+        }
+
+        stage('Node-Version') {
+            agent {
+                docker { image 'node:16.13.1-alpine' }
+            }
+
+            steps {
+                sh 'node --version'
+            }
+        }
+    }
+}
