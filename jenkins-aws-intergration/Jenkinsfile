@@ -1,0 +1,22 @@
+pipeline {
+    agent {label 'worker-node'}
+    environment {
+        // https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-envvars.html
+        AWS_DEFAULT_REGION='ap-south-1'
+        // AWS_ACCESS_KEY_ID='VALUE'
+        // AWS_SECRET_ACCESS_KEY='VALUE'
+    }
+
+    stages {
+        stage('AWS CLI Version') {
+            steps {
+                // At the moment of writing, snippet generator for withCredentials for AWS credentials plugin is broken.
+                // Below withCredentials block for AWS is working, manually created.
+                withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws-cli-creds', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
+                    //sh 'aws --version'
+                    sh 'aws ec2 describe-instances'
+                }
+            }
+        }
+    }
+}
