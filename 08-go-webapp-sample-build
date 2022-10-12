@@ -1,0 +1,30 @@
+pipeline {
+    agent {
+        label 'worker-node'
+    }
+    
+    tools {
+        go '1.17'
+    }
+    
+    environment {
+        GO111MODULE='on'
+    }
+    
+    stages {
+        stage ('Test') {
+            steps {
+                git url: 'https://github.com/AdminTurnedDevOps/go-webapp-sample.git'
+            }
+        }
+        
+        stage('Docker Build') {
+            steps {
+                script {
+                   // app = docker.build("iniyan/go-webapp-sample")
+                   step([$class: 'DockerBuilderPublisher', cleanImages: false, cleanupWithJenkinsJobDelete: false, cloud: 'docker', dockerFileDirectory: '.', pushOnSuccess: false, tagsString: 'iniyan/go-webapp-sample:latest'])
+                   }
+            }
+        }
+    }
+}

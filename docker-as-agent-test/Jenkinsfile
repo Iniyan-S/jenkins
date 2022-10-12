@@ -1,0 +1,56 @@
+pipeline {
+    agent none
+    environment {
+        BIT_BUCKET=credentials('bitbucket-app-password')
+        CREDS = credentials('aws-cli-creds')
+        REGION = "ap-south-1"
+    }
+    
+    stages {
+        stage('Clone Repo') {
+            agent {
+                dockerfile {
+                    filename 'Dockerfile'
+                    dir 'docker-as-agent-test'
+                }
+            }
+
+            steps {
+                // https://stackoverflow.com/questions/39886995/how-to-access-bitbucket-using-app-password
+                sh 'git clone https://$BIT_BUCKET_USR:$BIT_BUCKET_PSW@bitbucket.org/iniyan-s/java-static-webapp.git'
+            }
+        }
+
+        stage('Maven Build') {
+            agent {
+                docker {image 'maven:3.6.3-jdk-11-slim'}
+            }
+
+            steps {
+                sh 'mvn clean package -f java-static-webapp/webapp/pom.xml'
+            }
+        }
+
+        stage('Deploy Artifact') {
+            
+            agent {
+                dockerfile {
+                    filename 'Dockerfile-AWS-CLI'
+                    dir 'docker-as-agent-test'
+                    //args '--env AWS_ACCESS_KEY_ID=$CREDS_USR --env AWS_SECRET_ACCESS_KEY=$CREDS_PSW'
+                }
+            }
+
+            steps {
+                //withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws-cli-creds', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) { 
+                    sh 'export AWS_ACCESS_KEY_ID=$CREDS_USR'
+                    sh 'export AWS_SECRET_ACCESS_KEY=$CREDS_PSW'
+                    sh 'export AWS_DEFAULT_REGION="ap-south-1"'
+                    sh 'echo $CREDS_USR'
+                    sh 'echo $CREDS_PSW'
+                    sh 'aws s3 ls'
+                //}
+            }
+        }
+    }
+}

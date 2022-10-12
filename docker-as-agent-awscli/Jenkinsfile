@@ -1,0 +1,30 @@
+pipeline {
+    agent none 
+    environment {
+        CREDS = credentials('aws-cli-creds')
+        // REGION = "ap-south-1"
+    }
+
+    stages {
+        stage('AWS') {
+            agent {
+                dockerfile {
+                    filename 'Dockerfile'
+                    dir 'docker-as-agent-awscli'
+                }
+            }
+
+            steps {
+                // sh 'export AWS_ACCESS_KEY_ID=$CREDS_USR'
+                // sh 'export AWS_SECRET_ACCESS_KEY=$CREDS_PSW'
+                sh '''
+                    AWS_ACCESS_KEY_ID=$CREDS_USR
+                    AWS_SECRET_ACCESS_KEY=$CREDS_PSW
+                    AWS_DEFAULT_REGION="ap-south-1"
+                    env
+                    aws ec2 describe-instances
+                '''
+            }
+        }
+    }
+}
