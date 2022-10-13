@@ -1,7 +1,7 @@
 pipeline {
     agent none 
     environment {
-        CREDS = credentials('aws-cli-creds')
+        CREDS = credentials('awscli-creds')
         // REGION = "ap-south-1"
     }
 
