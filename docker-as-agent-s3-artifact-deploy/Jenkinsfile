@@ -2,7 +2,7 @@ pipeline {
     agent none
     environment {
         BIT_BUCKET=credentials('bitbucket-app-password')
-        CREDS = credentials('aws-cli-creds')
+        CREDS = credentials('awscli-creds')
         REGION = "ap-south-1"
     }
     
@@ -31,7 +31,7 @@ pipeline {
             }
         }
 
-        stage('Deploy Artifact') {
+        stage('Deploy Artifact to S3') {
             
             agent {
                 dockerfile {
@@ -42,15 +42,25 @@ pipeline {
             }
 
             steps {
+                // Below S3 bucket has a cutom S3 bucket policy to allow upload from docker running host IP.
                 //withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws-cli-creds', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) { 
-                    sh 'export AWS_ACCESS_KEY_ID=$CREDS_USR'
-                    sh 'export AWS_SECRET_ACCESS_KEY=$CREDS_PSW'
-                    sh 'export AWS_DEFAULT_REGION="ap-south-1"'
-                    sh 'echo $CREDS_USR'
-                    sh 'echo $CREDS_PSW'
-                    sh 'aws s3 ls'
+                    sh '''
+                        AWS_ACCESS_KEY_ID=$CREDS_USR
+                        AWS_SECRET_ACCESS_KEY=$CREDS_PSW
+                        AWS_DEFAULT_REGION=$REGION
+                        aws s3 cp java-static-webapp/webapp/target/*.war s3://artifacts.devopsguru.club/
+                        '''
                 //}
             }
         }
+
+        stage('Clean Up') {
+            agent {label 'test-node'} // Where the job is running, docker host.
+
+            steps {
+                deleteDir() // deleteDir: Recursively delete the current directory from the workspace (https://www.jenkins.io/doc/pipeline/steps/workflow-basic-steps/#deletedir-recursively-delete-the-current-directory-from-the-workspace)
+            }
+        }
+
     }
 }
