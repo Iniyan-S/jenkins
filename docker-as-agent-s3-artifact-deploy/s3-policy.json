@@ -1,0 +1,48 @@
+https://www.youtube.com/watch?v=BVCcOPsZGWY
+https://tomgregory.com/when-to-use-an-aws-s3-vpc-endpoint/
+
+Use any one of the block from below
+
+{
+    "Version": "2012-10-17",
+    "Id": "S3PolicyId1",
+    "Statement": [
+        {
+            "Sid": "Access-to-specific-VPC-only",
+            "Effect": "Allow",
+            "Principal": "*",
+            "Action": "s3:PutObject",
+            "Resource": [
+                "arn:aws:s3:::artifacts.devopsguru.club",
+                "arn:aws:s3:::artifacts.devopsguru.club/*"
+            ],
+            "Condition": {
+                "StringEquals": {
+                    "aws:SourceVpce": "<VPC_ENDPOINT_ID>"
+                }
+            }
+        }
+    ]
+}
+
+{
+    "Version": "2012-10-17",
+    "Id": "S3PolicyId1",
+    "Statement": [
+        {
+            "Sid": "Ip-Allow",
+            "Effect": "Allow",
+            "Principal": "*",
+            "Action": "s3:PutObject",
+            "Resource": [
+                "arn:aws:s3:::artifacts.devopsguru.club",
+                "arn:aws:s3:::artifacts.devopsguru.club/*"
+            ],
+            "Condition": {
+                "IpAddress": {
+                    "aws:SourceIp": "3.110.160.214/32"
+                }
+            }
+        }
+    ]
+}

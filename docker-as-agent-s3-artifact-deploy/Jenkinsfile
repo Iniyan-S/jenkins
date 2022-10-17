@@ -11,7 +11,7 @@ pipeline {
             agent {
                 dockerfile {
                     filename 'Dockerfile'
-                    dir 'docker-as-agent-test'
+                    dir 'docker-as-agent-s3-artifact-deploy'
                 }
             }
 
@@ -36,7 +36,7 @@ pipeline {
             agent {
                 dockerfile {
                     filename 'Dockerfile-AWS-CLI'
-                    dir 'docker-as-agent-test'
+                    dir 'docker-as-agent-s3-artifact-deploy'
                     //args '--env AWS_ACCESS_KEY_ID=$CREDS_USR --env AWS_SECRET_ACCESS_KEY=$CREDS_PSW'
                 }
             }
