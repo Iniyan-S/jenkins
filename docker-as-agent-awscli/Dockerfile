@@ -4,7 +4,6 @@ RUN apk update && apk add --no-cache \
     bash \
     curl \
     wget \
-    curl \
     python3 \
     py3-pip
 RUN pip install --upgrade pip && \
